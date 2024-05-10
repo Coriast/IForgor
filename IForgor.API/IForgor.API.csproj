@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\IForgor.Contracts\IForgor.Contracts.csproj" />
     <ProjectReference Include="..\IForgor.Application\IForgor.Application.csproj" />
     <ProjectReference Include="..\IForgor.Infrastructure\IForgor.Infrastructure.csproj" />
