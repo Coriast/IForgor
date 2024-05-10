@@ -1,6 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+using IForgor.Application.Services.Authentication;
 
-builder.Services.AddControllers();
+var builder = WebApplication.CreateBuilder(args);
+{
+    // Dependency Injection
+    builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+    builder.Services.AddControllers();
+}
+
 
 var app = builder.Build();
 
