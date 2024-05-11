@@ -1,33 +1,59 @@
-﻿using IForgor.Application.Interfaces.Authentication;
+﻿using IForgor.Application.Common.Interfaces.Authentication;
+using IForgor.Application.Common.Interfaces.Persistence;
+using IForgor.Domain.Entities;
 
 namespace IForgor.Application.Services.Authentication;
 
 public class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IUserRepository _userRepository;
 
-    public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator)
+    public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
+        _userRepository = userRepository;
     }
 
     public AuthenticationResult Register(string nickname, string email, string password)
     {
-        // Check if user already exists
+        // 1. Validate the user doesn't exist
+        if(_userRepository.GetUserByEmail(email) != null)
+        {
+            throw new Exception("User with given email already exists");
+        }
 
+        // 2. Create user & persist to DB
+        var user = new User
+        { 
+            Nickname = nickname,
+            Email = email,
+            Password = password 
+        };
 
-        // Create user -> Generating unique ID
+        _userRepository.Add(user);
 
-        // Create JWT token
-        Guid userId = Guid.NewGuid();
+        // 3. Create JWT token
+        var token = _jwtTokenGenerator.GenerateToken(user);
 
-        var token = _jwtTokenGenerator.GenerateToken(userId, nickname);
-
-        return new AuthenticationResult(userId, nickname, email, token);
+        return new AuthenticationResult(user, token);
     }
 
     public AuthenticationResult Login(string email, string password)
     {
-        return new AuthenticationResult(Guid.NewGuid(), "nickname", email, "token");
+        var user = _userRepository.GetUserByEmail(email);
+        if (user is null)
+        {
+            throw new Exception("User with given email does not exist.");
+        }
+
+        if(user.Password != password)
+        {
+            throw new Exception("Invalid password");
+        }
+
+        var token = _jwtTokenGenerator.GenerateToken(user);
+
+        return new AuthenticationResult(user, token);
     }
 }

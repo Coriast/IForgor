@@ -1,2 +1,4 @@
-﻿namespace IForgor.Application.Services.Authentication;
-public record AuthenticationResult(Guid Id, string Nickname, string Email, string Token);
+﻿using IForgor.Domain.Entities;
+
+namespace IForgor.Application.Services.Authentication;
+public record AuthenticationResult(User user, string Token);

@@ -1,7 +1,6 @@
 ﻿using IForgor.Application.Services.Authentication;
 using IForgor.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace IForgor.API.Controllers;
 
@@ -22,9 +21,9 @@ public class AuthenticationController : ControllerBase
         var authResult = _authenticationService.Register(request.Nickname, request.Email, request.Password);
 
         var response = new AuthenticationResponse(
-            authResult.Id,
-            authResult.Nickname,
-            authResult.Email,
+            authResult.user.Id,
+            authResult.user.Nickname,
+            authResult.user.Email,
             authResult.Token
             );
 
@@ -37,9 +36,9 @@ public class AuthenticationController : ControllerBase
         var authResult = _authenticationService.Login(request.Email, request.Password);
 
         var response = new AuthenticationResponse(
-            authResult.Id,
-            authResult.Nickname,
-            authResult.Email,
+            authResult.user.Id,
+            authResult.user.Nickname,
+            authResult.user.Email,
             authResult.Token
             );
 
