@@ -1,17 +1,13 @@
-using IForgor.API.Common.Errors;
+using IForgor.API;
 using IForgor.Application;
 using IForgor.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
+        .AddPresentation()
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
-
-    builder.Services.AddControllers();
-
-    builder.Services.AddSingleton<ProblemDetailsFactory, IForgorProblemDetailsFactory>();
 }
 
 
