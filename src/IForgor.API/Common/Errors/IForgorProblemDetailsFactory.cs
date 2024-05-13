@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ErrorOr;
+using IForgor.API.Common.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
-namespace IForgor.API.Errors;
+namespace IForgor.API.Common.Errors;
 
 public class IForgorProblemDetailsFactory : ProblemDetailsFactory
 {
@@ -47,7 +49,7 @@ public class IForgorProblemDetailsFactory : ProblemDetailsFactory
             Instance = instance,
         };
 
-        if(title != null)
+        if (title != null)
         {
             problemDetails.Title = title;
         }
@@ -61,19 +63,24 @@ public class IForgorProblemDetailsFactory : ProblemDetailsFactory
     {
         problemDetails.Status ??= statusCode;
 
-        if(_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
+        if (_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
         {
             problemDetails.Title ??= clientErrorData.Title;
             problemDetails.Type ??= clientErrorData.Link;
         }
 
         var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
-        if(traceId != null)
+        if (traceId != null)
         {
             problemDetails.Extensions["traceId"] = traceId;
         }
 
         // Add custom properties
-        //problemDetails.Extensions.Add("customProperty", "customValue");
+        var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
+
+        if(errors is not null)
+        {
+            problemDetails.Extensions.Add("errorCodes", errors.Select(error => error.Code));
+        }
     }
 }

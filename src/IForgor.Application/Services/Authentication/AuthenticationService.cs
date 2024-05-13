@@ -1,5 +1,7 @@
-﻿using IForgor.Application.Common.Interfaces.Authentication;
+﻿using ErrorOr;
+using IForgor.Application.Common.Interfaces.Authentication;
 using IForgor.Application.Common.Interfaces.Persistence;
+using IForgor.Domain.Common.Errors;
 using IForgor.Domain.Entities;
 
 namespace IForgor.Application.Services.Authentication;
@@ -15,12 +17,12 @@ public class AuthenticationService : IAuthenticationService
         _userRepository = userRepository;
     }
 
-    public AuthenticationResult Register(string nickname, string email, string password)
+    public ErrorOr<AuthenticationResult> Register(string nickname, string email, string password)
     {
         // 1. Validate the user doesn't exist
         if(_userRepository.GetUserByEmail(email) != null)
         {
-            throw new Exception("User with given email already exists");
+            return Errors.User.DuplicateEmail;
         }
 
         // 2. Create user & persist to DB
@@ -39,17 +41,17 @@ public class AuthenticationService : IAuthenticationService
         return new AuthenticationResult(user, token);
     }
 
-    public AuthenticationResult Login(string email, string password)
+    public ErrorOr<AuthenticationResult> Login(string email, string password)
     {
         var user = _userRepository.GetUserByEmail(email);
         if (user is null)
         {
-            throw new Exception("User with given email does not exist.");
+            return Errors.Authentication.InvalidCredentials;
         }
 
         if(user.Password != password)
         {
-            throw new Exception("Invalid password");
+            return Errors.Authentication.InvalidCredentials;
         }
 
         var token = _jwtTokenGenerator.GenerateToken(user);

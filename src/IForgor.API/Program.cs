@@ -1,4 +1,4 @@
-using IForgor.API.Errors;
+using IForgor.API.Common.Errors;
 using IForgor.Application;
 using IForgor.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -17,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-app.UseExceptionHandler("/error");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

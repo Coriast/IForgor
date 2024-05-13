@@ -1,12 +1,13 @@
-﻿using IForgor.Application.Services.Authentication;
+﻿using ErrorOr;
+using IForgor.Application.Services.Authentication;
 using IForgor.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using IForgor.Domain.Common.Errors;
 
 namespace IForgor.API.Controllers;
 
-[ApiController]
 [Route("auth")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
     private readonly IAuthenticationService _authenticationService;
 
@@ -18,32 +19,38 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest request)
     {
-        var authResult = _authenticationService.Register(request.Nickname, request.Email, request.Password);
+        ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(request.Nickname, request.Email, request.Password);
 
-        var response = new AuthenticationResponse(
-            authResult.user.Id,
-            authResult.user.Nickname,
-            authResult.user.Email,
-            authResult.Token
-            );
-
-        return Ok(response);
+        return authResult.Match(
+            authResult => Ok(MapAuthResult(authResult)),
+            errors => Problem(errors)
+        );
     }
-    
+
     [HttpPost("login")]
     public IActionResult Login(LoginRequest request)
     {
-        var authResult = _authenticationService.Login(request.Email, request.Password);
+        ErrorOr<AuthenticationResult> authResult = _authenticationService.Login(request.Email, request.Password);
 
-        var response = new AuthenticationResponse(
-            authResult.user.Id,
-            authResult.user.Nickname,
-            authResult.user.Email,
-            authResult.Token
-            );
+        if(authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
+        {
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+        }
 
-        return Ok(response);
+        return authResult.Match(
+                authResult => Ok(MapAuthResult(authResult)),
+                errors => Problem(errors)
+        );
     }
 
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
+    {
+        return new AuthenticationResponse(
+            authResult.User.Id,
+            authResult.User.Nickname,
+            authResult.User.Email,
+            authResult.Token
+        );
+    }
 
 }
