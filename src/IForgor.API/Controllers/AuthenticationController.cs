@@ -1,29 +1,30 @@
 ﻿using ErrorOr;
+using IForgor.Application.Authentication.Commands.Register;
+using IForgor.Application.Authentication.Common;
+using IForgor.Application.Authentication.Queries.Login;
 using IForgor.Contracts.Authentication;
-using Microsoft.AspNetCore.Mvc;
 using IForgor.Domain.Common.Errors;
-using IForgor.Application.Services.Authentication.Common;
-using IForgor.Application.Services.Authentication.Commands;
-using IForgor.Application.Services.Authentication.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IForgor.API.Controllers;
 
 [Route("auth")]
 public class AuthenticationController : ApiController
 {
-    private readonly IAuthenticationCommandService _authCommandService;
-    private readonly IAuthenticationQueryService _authQueryService;
+    private readonly ISender _mediator;
 
-    public AuthenticationController(IAuthenticationCommandService authCommandService, IAuthenticationQueryService authQueryService)
+    public AuthenticationController(ISender mediator)
     {
-        _authCommandService = authCommandService;
-        _authQueryService = authQueryService;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
-    public IActionResult Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
-        ErrorOr<AuthenticationResult> authResult = _authCommandService.Register(request.Nickname, request.Email, request.Password);
+        var command = new RegisterCommand(request.Nickname, request.Email, request.Password);
+
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
 
         return authResult.Match(
             authResult => Ok(MapAuthResult(authResult)),
@@ -32,9 +33,11 @@ public class AuthenticationController : ApiController
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        ErrorOr<AuthenticationResult> authResult = _authQueryService.Login(request.Email, request.Password);
+        var query = new LoginQuery(request.Email, request.Password);
+
+        ErrorOr<AuthenticationResult> authResult = await _mediator.Send(query);
 
         if(authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
         {

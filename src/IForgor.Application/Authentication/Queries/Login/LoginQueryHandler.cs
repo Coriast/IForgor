@@ -1,31 +1,31 @@
 ﻿using ErrorOr;
+using IForgor.Application.Authentication.Common;
 using IForgor.Application.Common.Interfaces.Authentication;
 using IForgor.Application.Common.Interfaces.Persistence;
-using IForgor.Application.Services.Authentication.Common;
 using IForgor.Domain.Common.Errors;
+using MediatR;
 
-namespace IForgor.Application.Services.Authentication.Queries;
-
-public class AuthenticationQueryService : IAuthenticationQueryService
+namespace IForgor.Application.Authentication.Queries.Login;
+public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationQueryService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+    public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
 
-    public ErrorOr<AuthenticationResult> Login(string email, string password)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
-        var user = _userRepository.GetUserByEmail(email);
+        var user = _userRepository.GetUserByEmail(query.Email);
         if (user is null)
         {
             return Errors.Authentication.InvalidCredentials;
         }
 
-        if(user.Password != password)
+        if (user.Password != query.Password)
         {
             return Errors.Authentication.InvalidCredentials;
         }

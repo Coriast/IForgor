@@ -1,27 +1,27 @@
 ﻿using ErrorOr;
+using IForgor.Application.Authentication.Common;
 using IForgor.Application.Common.Interfaces.Authentication;
 using IForgor.Application.Common.Interfaces.Persistence;
-using IForgor.Application.Services.Authentication.Common;
 using IForgor.Domain.Common.Errors;
 using IForgor.Domain.Entities;
+using MediatR;
 
-namespace IForgor.Application.Services.Authentication.Commands;
-
-public class AuthenticationCommandService : IAuthenticationCommandService
+namespace IForgor.Application.Authentication.Commands.Register;
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationCommandService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+    public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
 
-    public ErrorOr<AuthenticationResult> Register(string nickname, string email, string password)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         // 1. Validate the user doesn't exist
-        if (_userRepository.GetUserByEmail(email) != null)
+        if (_userRepository.GetUserByEmail(command.Email) != null)
         {
             return Errors.User.DuplicateEmail;
         }
@@ -29,9 +29,9 @@ public class AuthenticationCommandService : IAuthenticationCommandService
         // 2. Create user & persist to DB
         var user = new User
         {
-            Nickname = nickname,
-            Email = email,
-            Password = password
+            Nickname = command.Nickname,
+            Email = command.Email,
+            Password = command.Password
         };
 
         _userRepository.Add(user);
