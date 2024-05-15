@@ -4,14 +4,14 @@ using IForgor.Domain.Entities;
 namespace IForgor.Infrastructure.Persistence;
 public class UserRepository : IUserRepository
 {
-    private static readonly List<User> _users = new();
+    private static readonly List<UserLegacy> _users = new();
 
-    public void Add(User user)
+    public void Add(UserLegacy user)
     {
         _users.Add(user);
     }
 
-    public User? GetUserByEmail(string email)
+    public UserLegacy? GetUserByEmail(string email)
     {
         return _users.SingleOrDefault(user => user.Email == email);
     }

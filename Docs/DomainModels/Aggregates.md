@@ -97,13 +97,13 @@ class StudySubject
 {
     StudySubject Create();
 
-    void AddStudyMaterial(StudyMaterial studyMaterial);
+    void AddStudyMaterial(StudySubjectMaterial studySubjectMaterial);
     void AddField(Field field);
 
-    void RemoveStudyMaterial(StudyMaterial studyMaterial);
+    void RemoveStudyMaterial(StudySubjectMaterial studySubjectMaterial);
     void RemoveField(Field field);
 
-    void UpdateStudyMaterial(StudyMaterial studyMaterial);
+    void UpdateStudyMaterial(StudySubjectMaterial studySubjectMaterial);
     void UpdateMilestone(Milestone milestone);
 }
 ```
@@ -112,7 +112,7 @@ class StudySubject
 {
     "id": "00000-000000-00000-0000",
     "title": "Unity",
-    "studyMaterials": [
+    "materials": [
         {
             "id": "00000-000000-00000-0000",
             "name": "The Unity Shaders Bible",

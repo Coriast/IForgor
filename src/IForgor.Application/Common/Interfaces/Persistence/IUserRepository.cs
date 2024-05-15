@@ -3,6 +3,6 @@
 namespace IForgor.Application.Common.Interfaces.Persistence;
 public interface IUserRepository
 {
-    User? GetUserByEmail(string email);
-    void Add(User user);
+    UserLegacy? GetUserByEmail(string email);
+    void Add(UserLegacy user);
 }

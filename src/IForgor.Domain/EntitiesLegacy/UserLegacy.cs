@@ -1,5 +1,5 @@
 ﻿namespace IForgor.Domain.Entities;
-public class User
+public class UserLegacy
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Nickname { get; set; } = string.Empty;

@@ -29,7 +29,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         }
 
         // 2. Create user & persist to DB
-        var user = new User
+        var user = new UserLegacy
         {
             Nickname = command.Nickname,
             Email = command.Email,
