@@ -16,16 +16,24 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddAuth(configuration);
+        services.AddAuth(configuration)
+            .AddPersistence();
 
         // Setting as Singleton because we use only a single instance through the entire application
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-        // Keeps the same instance throughout the entire request
-        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
-    
+
+    private static IServiceCollection AddPersistence(this IServiceCollection services)
+    {
+        // Keeps the same instance throughout the entire request
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDeskRepository, DeskRepository>();
+
+        return services;
+    }
+
     public static IServiceCollection AddAuth(this IServiceCollection services, ConfigurationManager configuration)
     {
         var jwtSettings = new JwtSettings();

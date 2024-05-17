@@ -71,6 +71,7 @@ class Project
     Project Create();
 
     void AddField(Field field);
+    void RemoveField(Field field);
 
     void UpdateMilestone(Milestone milestone);
 }

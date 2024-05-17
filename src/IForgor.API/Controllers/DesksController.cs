@@ -1,15 +1,33 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IForgor.Application.Desks.Commands.CreateDesk;
+using IForgor.Contracts.Desks;
+using MapsterMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IForgor.API.Controllers;
 
-[Route("[controller]")]
+[Route("users/{UserId}/desks")]
 public class DesksController : ApiController
 {
+    private readonly IMapper _mapper;
+    private readonly ISender _mediator;
 
-    [HttpGet]
-    public IActionResult ListDesks()
+    public DesksController(IMapper mapper, ISender mediator)
     {
-        return Ok(Array.Empty<string>());
+        _mapper = mapper;
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateDesk(CreateDeskRequest request, string UserId)
+    {
+        var command = _mapper.Map<CreateDeskCommand>((request, UserId));
+
+        var createDeskResult = await _mediator.Send(command);
+
+        return createDeskResult.Match(
+            createDeskResult => Ok(_mapper.Map<DeskResponse>(createDeskResult)),
+            errors => Problem(errors)
+        );
     }
 }
