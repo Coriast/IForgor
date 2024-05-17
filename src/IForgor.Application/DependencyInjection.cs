@@ -1,7 +1,4 @@
-﻿using ErrorOr;
-using FluentValidation;
-using IForgor.Application.Authentication.Commands.Register;
-using IForgor.Application.Authentication.Common;
+﻿using FluentValidation;
 using IForgor.Application.Common.Behaviours;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

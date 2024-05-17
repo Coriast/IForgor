@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
 
 namespace IForgor.Application.Desks.Commands.CreateDesk;
-internal class CreateDeskCommandValidator
+
+public class CreateDeskCommandValidator : AbstractValidator<CreateDeskCommand>
 {
+    public CreateDeskCommandValidator()
+    {
+        RuleFor(prop => prop.Title).NotEmpty();
+    }
 }
