@@ -1,7 +1,7 @@
 ﻿using IForgor.Application.Common.Interfaces.Persistence;
 using IForgor.Domain.Entities;
 
-namespace IForgor.Infrastructure.Persistence;
+namespace IForgor.Infrastructure.Persistence.Repositories;
 public class UserRepository : IUserRepository
 {
     private static readonly List<UserLegacy> _users = new();

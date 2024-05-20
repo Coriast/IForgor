@@ -11,11 +11,17 @@ public sealed class Desk : AggregateRoot<DeskId>
     private readonly List<ProjectId> _projectIds = new();
     private readonly List<StudySubjectId> _studySubjectIds = new();
     private readonly List<FieldId> _fieldIds = new();
-    public string Title { get; } = string.Empty;
-    public UserId UserId { get; }
-    public IReadOnlyList<ProjectId> ProjectIds { get { return _projectIds.AsReadOnly(); } }
-    public IReadOnlyList<StudySubjectId> StudySubjectIds { get { return _studySubjectIds.AsReadOnly(); } }
-    public IReadOnlyList<FieldId> FieldIds { get { return _fieldIds.AsReadOnly(); } }
+    public string Title { get; private set; } = string.Empty;
+    public UserId UserId { get; private set;  }
+    public IReadOnlyList<ProjectId> ProjectIds => _projectIds.AsReadOnly();
+    public IReadOnlyList<StudySubjectId> StudySubjectIds => _studySubjectIds.AsReadOnly(); 
+    public IReadOnlyList<FieldId> FieldIds => _fieldIds.AsReadOnly();
+
+#pragma warning disable CS8618
+    private Desk()
+    {
+    }
+#pragma warning restore CS8618
 
     private Desk(
         DeskId id,

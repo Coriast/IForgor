@@ -3,8 +3,10 @@ using IForgor.Application.Common.Interfaces.Persistence;
 using IForgor.Application.Common.Interfaces.Services;
 using IForgor.Infrastructure.Authentication;
 using IForgor.Infrastructure.Persistence;
+using IForgor.Infrastructure.Persistence.Repositories;
 using IForgor.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -30,6 +32,11 @@ public static class DependencyInjection
         // Keeps the same instance throughout the entire request
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDeskRepository, DeskRepository>();
+
+        services.AddDbContext<IforgorDbContext>(options =>
+        {
+            options.UseSqlServer();
+        });
 
         return services;
     }
