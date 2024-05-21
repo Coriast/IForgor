@@ -19,7 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddAuth(configuration)
-            .AddPersistence();
+            .AddPersistence(configuration);
 
         // Setting as Singleton because we use only a single instance through the entire application
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
@@ -27,15 +27,15 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services)
+    private static IServiceCollection AddPersistence(this IServiceCollection services, ConfigurationManager configuration)
     {
         // Keeps the same instance throughout the entire request
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDeskRepository, DeskRepository>();
-
+        
         services.AddDbContext<IforgorDbContext>(options =>
         {
-            options.UseSqlServer();
+            options.UseNpgsql(configuration["IForgor:ConnectionString"]);
         });
 
         return services;
