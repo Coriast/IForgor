@@ -17,6 +17,12 @@ public class User : AggregateRoot<UserId>
         CreatedAt = createdAt;
     }
 
+#pragma warning disable CS8618
+    private User()
+    {
+    }
+#pragma warning restore CS8618
+
     public static User Create(string nickname,  string email, string password)
     {
         return new(UserId.CreateUnique(), nickname, email, password, DateTime.UtcNow);

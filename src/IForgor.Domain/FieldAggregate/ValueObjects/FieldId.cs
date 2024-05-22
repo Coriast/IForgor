@@ -10,6 +10,12 @@ public sealed class FieldId : ValueObject
         Value = value;
     }
 
+#pragma warning disable CS8618
+    private FieldId()
+    {
+    }
+#pragma warning restore CS8618
+
     public static FieldId CreateUnique()
     {
         return new(Guid.NewGuid());

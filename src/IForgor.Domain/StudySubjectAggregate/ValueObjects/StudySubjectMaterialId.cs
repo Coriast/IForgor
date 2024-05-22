@@ -10,6 +10,12 @@ public sealed class StudySubjectMaterialId : ValueObject
         Value = value;
     }
 
+#pragma warning disable CS8618
+    private StudySubjectMaterialId()
+    {
+    }
+#pragma warning restore CS8618
+
     public static StudySubjectMaterialId CreateUnique()
     {
         return new(Guid.NewGuid());

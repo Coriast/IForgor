@@ -11,6 +11,12 @@ public sealed class ProjectId : ValueObject
         Value = value;
     }
 
+#pragma warning disable CS8618
+    private ProjectId()
+    {
+    }
+#pragma warning restore CS8618
+
     public static ProjectId CreateUnique()
     {
         return new(Guid.NewGuid());

@@ -1,7 +1,7 @@
 ﻿using IForgor.Domain.Common.Models;
 using IForgor.Domain.DeskAggregate.ValueObjects;
 using IForgor.Domain.FieldAggregate.ValueObjects;
-using IForgor.Domain.MilestoneAggregate.ValueObjects;
+using IForgor.Domain.ProjectAggregate.Enums;
 using IForgor.Domain.StudySubjectAggregate.Entities;
 using IForgor.Domain.StudySubjectAggregate.ValueObjects;
 
@@ -12,7 +12,7 @@ public sealed class StudySubject : AggregateRoot<StudySubjectId>
     public string Title { get; }
     public IReadOnlyList<StudySubjectMaterial> Materials { get {  return _materials.AsReadOnly(); } }
     public FieldId FieldId { get; }
-    public MilestoneId MilestoneId { get; }
+    public Milestone MilestoneType { get; }
     public DeskId DeskId { get; }
     public DateTime CreatedAt { get; }
 
@@ -21,23 +21,29 @@ public sealed class StudySubject : AggregateRoot<StudySubjectId>
         string title,
         List<StudySubjectMaterial> materials,
         FieldId fieldId,
-        MilestoneId milestoneId,
+        Milestone milestoneType,
         DeskId deskId,
         DateTime createdAt) : base(id)
     {
         _materials = materials;
         Title = title;
         FieldId = fieldId;
-        MilestoneId = milestoneId;
+        MilestoneType = milestoneType;
         DeskId = deskId;
         CreatedAt = createdAt;
     }
+
+#pragma warning disable CS8618
+    private StudySubject()
+    {
+    }
+#pragma warning restore CS8618
 
     public static StudySubject Create(
         string title,
         List<StudySubjectMaterial> materials,
         FieldId fieldId,
-        MilestoneId milestoneId,
+        Milestone milestoneType,
         DeskId deskId)
     {
         return new(
@@ -45,7 +51,7 @@ public sealed class StudySubject : AggregateRoot<StudySubjectId>
             title,
             materials,
             fieldId,
-            milestoneId,
+            milestoneType,
             deskId,
             DateTime.UtcNow);
     }

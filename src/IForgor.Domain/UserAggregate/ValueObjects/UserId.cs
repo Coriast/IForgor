@@ -11,6 +11,12 @@ public sealed class UserId : ValueObject
         Value = value;
     }
 
+#pragma warning disable CS8618
+    private UserId()
+    {
+    }
+#pragma warning restore CS8618
+
     public static UserId CreateUnique()
     {
         return new(Guid.NewGuid());

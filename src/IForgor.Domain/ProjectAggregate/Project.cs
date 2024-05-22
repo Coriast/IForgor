@@ -1,7 +1,6 @@
 ﻿using IForgor.Domain.Common.Models;
 using IForgor.Domain.DeskAggregate.ValueObjects;
 using IForgor.Domain.FieldAggregate.ValueObjects;
-using IForgor.Domain.MilestoneAggregate.ValueObjects;
 using IForgor.Domain.ProjectAggregate.Enums;
 using IForgor.Domain.ProjectAggregate.ValueObjects;
 
@@ -12,7 +11,7 @@ public sealed class Project : AggregateRoot<ProjectId>
     public string Title { get; } = string.Empty;
     public string Description { get; } = string.Empty;
     public ProjectStatus Status { get; }
-    public MilestoneId MilestoneId { get; }
+    public Milestone MilestoneType { get; }
     public FieldId FieldId { get; }
     public DeskId DeskId { get; }
     public DateTime CreatedAt { get; }
@@ -22,7 +21,7 @@ public sealed class Project : AggregateRoot<ProjectId>
         string title,
         string description,
         ProjectStatus status,
-        MilestoneId milestoneId,
+        Milestone milestoneType,
         FieldId fieldId,
         DeskId deskId,
         DateTime createdAt) : base(id)
@@ -30,17 +29,23 @@ public sealed class Project : AggregateRoot<ProjectId>
         Title = title;
         Description = description;
         Status = status;
-        MilestoneId = milestoneId;
+        MilestoneType = milestoneType;
         FieldId = fieldId;
         DeskId = deskId;
         CreatedAt = createdAt;
     }
 
+#pragma warning disable CS8618
+    private Project()
+    {
+    }
+#pragma warning restore CS8618
+
     public static Project Create(
         string title,
         string description,
         ProjectStatus status,
-        MilestoneId milestoneId,
+        Milestone milestoneType,
         FieldId fieldId,
         DeskId deskId)
     {
@@ -49,7 +54,7 @@ public sealed class Project : AggregateRoot<ProjectId>
             title,
             description,
             status,
-            milestoneId,
+            milestoneType,
             fieldId,
             deskId,
             DateTime.UtcNow);

@@ -13,6 +13,12 @@ public sealed class StudySubjectMaterial : Entity<StudySubjectMaterialId>
         Sources = sources;
     }
 
+#pragma warning disable CS8618
+    private StudySubjectMaterial()
+    {
+    }
+#pragma warning restore CS8618
+
     public static StudySubjectMaterial Create(string name, List<string> sources)
     {
         return new(StudySubjectMaterialId.CreateUnique(), name, sources);
