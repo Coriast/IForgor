@@ -6,6 +6,6 @@ public class CreateDeskCommandValidator : AbstractValidator<CreateDeskCommand>
 {
     public CreateDeskCommandValidator()
     {
-        RuleFor(prop => prop.Title).NotEmpty();
+        RuleFor(desk => desk.Title).NotEmpty();
     }
 }

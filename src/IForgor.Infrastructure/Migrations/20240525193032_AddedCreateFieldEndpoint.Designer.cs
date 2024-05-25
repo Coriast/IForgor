@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IForgor.Infrastructure.Migrations
 {
     [DbContext(typeof(IforgorDbContext))]
-    [Migration("20240521145830_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240525193032_AddedCreateFieldEndpoint")]
+    partial class AddedCreateFieldEndpoint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,19 @@ namespace IForgor.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Desks", (string)null);
+                });
+
+            modelBuilder.Entity("IForgor.Domain.FieldAggregate.Field", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DeskId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fields", (string)null);
                 });
 
             modelBuilder.Entity("IForgor.Domain.DeskAggregate.Desk", b =>

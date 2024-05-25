@@ -25,4 +25,9 @@ public sealed class FieldId : ValueObject
     {
         yield return Value;
     }
+
+    public static FieldId Create(Guid value)
+    {
+        return new(value);
+    }
 }

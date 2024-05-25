@@ -32,6 +32,7 @@ public static class DependencyInjection
         // Keeps the same instance throughout the entire request
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDeskRepository, DeskRepository>();
+        services.AddScoped<IFieldRepository, FieldRepository>();
         
         services.AddDbContext<IforgorDbContext>(options =>
         {

@@ -1,8 +1,5 @@
 ﻿using IForgor.Domain.DeskAggregate;
 using IForgor.Domain.DeskAggregate.ValueObjects;
-using IForgor.Domain.FieldAggregate;
-using IForgor.Domain.ProjectAggregate;
-using IForgor.Domain.StudySubjectAggregate;
 using IForgor.Domain.UserAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

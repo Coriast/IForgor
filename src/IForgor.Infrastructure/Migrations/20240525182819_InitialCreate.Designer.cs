@@ -3,6 +3,7 @@ using System;
 using IForgor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IForgor.Infrastructure.Migrations
 {
     [DbContext(typeof(IforgorDbContext))]
-    partial class IforgorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240525182819_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,24 +41,6 @@ namespace IForgor.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Desks", (string)null);
-                });
-
-            modelBuilder.Entity("IForgor.Domain.FieldAggregate.Field", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DeskId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Fields", (string)null);
                 });
 
             modelBuilder.Entity("IForgor.Domain.DeskAggregate.Desk", b =>

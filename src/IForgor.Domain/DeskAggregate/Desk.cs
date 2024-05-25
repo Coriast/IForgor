@@ -8,14 +8,11 @@ using IForgor.Domain.UserAggregate.ValueObjects;
 namespace IForgor.Domain.DeskAggregate;
 public sealed class Desk : AggregateRoot<DeskId>
 {
-    private readonly List<ProjectId> _projectIds = new();
-    private readonly List<StudySubjectId> _studySubjectIds = new();
-    private readonly List<FieldId> _fieldIds = new();
     public string Title { get; private set; } = string.Empty;
     public UserId UserId { get; private set;  }
-    public IReadOnlyList<ProjectId> ProjectIds => _projectIds.AsReadOnly();
-    public IReadOnlyList<StudySubjectId> StudySubjectIds => _studySubjectIds.AsReadOnly(); 
-    public IReadOnlyList<FieldId> FieldIds => _fieldIds.AsReadOnly();
+    public List<ProjectId> ProjectIds { get; set; } = [];
+    public List<StudySubjectId> StudySubjectIds { get; set; } = [];
+    public List<FieldId> FieldIds{ get; set; } = [];
 
 #pragma warning disable CS8618
     private Desk()
